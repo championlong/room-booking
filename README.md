@@ -17,6 +17,7 @@
 * 参考 [gin-vue-admin](https://github.com/flipped-aurora/gin-vue-admin) 功能精简出本项目开发脚手架
 * 参考 [project-layout](https://github.com/golang-standards/project-layout)结构化目录结构规范，对`gin-vue-admin`目录进行改造
 * 参考 [IAM](https://github.com/marmotedu/iam) 引入构建应用框架等模块
+* [swagger地址](http://localhost:8888/swagger/index.html)
 
 ## 目录结构
 ```
