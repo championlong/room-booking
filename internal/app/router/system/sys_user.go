@@ -2,6 +2,7 @@ package system
 
 import (
 	v1 "github.com/championlong/go-quick-start/internal/app/controller"
+	"github.com/championlong/go-quick-start/internal/pkg/middleware"
 	"github.com/gin-gonic/gin"
 )
 
@@ -9,7 +10,7 @@ type UserRouter struct{}
 
 func (s *UserRouter) InitUserRouter(Router *gin.RouterGroup) {
 	userRouter := Router.Group("user").Use()
-	userRouterWithoutRecord := Router.Group("user")
+	userRouterWithoutRecord := Router.Group("user").Use(middleware.Output())
 	baseApi := v1.ApiGroupApp.SystemApiGroup.BaseApi
 	{
 		userRouter.POST("admin_register", baseApi.Register)               // 管理员注册账号

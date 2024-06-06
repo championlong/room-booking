@@ -10,6 +10,7 @@ import (
 	"github.com/championlong/go-quick-start/internal/app/model/system"
 	systemReq "github.com/championlong/go-quick-start/internal/app/model/system/request"
 	systemRes "github.com/championlong/go-quick-start/internal/app/model/system/response"
+	"github.com/championlong/go-quick-start/internal/pkg/constants"
 	"github.com/championlong/go-quick-start/internal/pkg/utils"
 	"github.com/championlong/go-quick-start/pkg/log"
 	"github.com/mojocn/base64Captcha"
@@ -229,19 +230,19 @@ func (b *BaseApi) GetUserList(c *gin.Context) {
 	var pageInfo request.PageInfo
 	_ = c.ShouldBindJSON(&pageInfo)
 	if err := utils.Verify(pageInfo, utils.PageInfoVerify); err != nil {
-		response.FailWithMessage(err.Error(), c)
+		_ = c.Error(constants.ErrInternalServerError)
 		return
 	}
 	if err, list, total := userService.GetUserInfoList(pageInfo); err != nil {
-		log.Error("获取失败!", zap.Error(err))
-		response.FailWithMessage("获取失败", c)
+		_ = c.Error(constants.ErrInternalServerError)
+		return
 	} else {
-		response.OkWithDetailed(response.PageResult{
+		c.Set(constants.ContextKeyResponse, response.PageResult{
 			List:     list,
 			Total:    total,
 			Page:     pageInfo.Page,
 			PageSize: pageInfo.PageSize,
-		}, "获取成功", c)
+		})
 	}
 }
 
@@ -410,11 +411,12 @@ func (b *BaseApi) SetSelfInfo(c *gin.Context) {
 //	@Router		/user/getUserInfo [get]
 func (b *BaseApi) GetUserInfo(c *gin.Context) {
 	uuid := utils.GetUserUuid(c)
+	c.Set(constants.ContextKeyRequest, uuid)
 	if err, ReqUser := userService.GetUserInfo(uuid); err != nil {
-		log.Error("获取失败!", zap.Error(err))
-		response.FailWithMessage("获取失败", c)
+		_ = c.Error(constants.ErrInternalServerError)
+		return
 	} else {
-		response.OkWithDetailed(gin.H{"userInfo": ReqUser}, "获取成功", c)
+		c.Set(constants.ContextKeyResponse, gin.H{"userInfo": ReqUser})
 	}
 }
 

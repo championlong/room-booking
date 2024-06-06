@@ -155,7 +155,7 @@ func (userService *UserService) SetUserInfo(req system.SysUser) error {
 
 func (userService *UserService) GetUserInfo(uuid uuid.UUID) (err error, user system.SysUser) {
 	var reqUser system.SysUser
-	err = global.GVA_DB.Preload("Authorities").Preload("Authority").First(&reqUser, "uuid = ?", uuid).Error
+	err = global.GVA_DB.First(&reqUser, "uuid = ?", uuid).Error
 	if err != nil {
 		return err, reqUser
 	}
